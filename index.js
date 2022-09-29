@@ -28,7 +28,9 @@ const updatePrices = async () => {
 
   const newOffers = [];
 
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    args: ["--no-sandbox"],
+  });
 
   /****************START GET THE LOWEST PRICE ***********************/
   const getTheLowestPrice = async (id, minPrice, maxPrice, url) => {
