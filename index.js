@@ -13,7 +13,7 @@ const myStoreName = "HomeTechnologies";
 const myStoreId = "15503068";
 const updateEveryXMinutes = 30;
 const tablename = "pricelist";
-const XMLFilePathHome = `./${tablename}.xml`;
+// const XMLFilePath = `./${tablename}.xml`;
 const XMLFilePath = `/home/apps/jmmanager/jmmanager-server/public/${tablename}.xml`;
 const cookiesPath = `./cookies/offers/cookies${tablename}.json`;
 const availabaleStorages = [1];
@@ -198,7 +198,9 @@ const updateXML = async (newOffers = []) => {
   let iter = 0;
   XML.kaspi_catalog.company = myStoreName;
   XML.kaspi_catalog.merchantid = myStoreId;
-  XML.kaspi_catalog.offers[0].offer = [];
+  delete XML.kaspi_catalog.offers[0].offer;
+  console.log(XML.kaspi_catalog.offers[0]);
+  XML.kaspi_catalog.offers[0].offer = {};
   //Проверить надо если добавлю еще авейлибилити будет ли ошибка?
   for (let offer of newOffers) {
     const availability = [];
