@@ -200,7 +200,7 @@ const updateXML = async (newOffers = []) => {
   XML.kaspi_catalog.merchantid = myStoreId;
   delete XML.kaspi_catalog.offers[0].offer;
   console.log(XML.kaspi_catalog.offers[0]);
-  XML.kaspi_catalog.offers[0]["offer"] = {};
+  XML.kaspi_catalog.offers[0] = { offer: {} };
   //Проверить надо если добавлю еще авейлибилити будет ли ошибка?
   for (let offer of newOffers) {
     const availability = [];
