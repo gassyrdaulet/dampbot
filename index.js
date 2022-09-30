@@ -190,17 +190,20 @@ try {
 /*************************START XML EDIT***************************/
 const updateXML = async (newOffers = []) => {
   let XML = 0;
+  let XML2 = 0;
   const parser = new xml2js.Parser();
   const data = await fs.readFile(XMLFilePath);
   parser.parseString(data, function (err, result) {
     XML = result;
   });
+  // const data2 = await fs.readFile("./lll.xml");
+  // parser.parseString(data2, function (err, result) {
+  //   XML2 = result;
+  // });
   let iter = 0;
   XML.kaspi_catalog.company = myStoreName;
   XML.kaspi_catalog.merchantid = myStoreId;
   delete XML.kaspi_catalog.offers[0].offer;
-  console.log(XML.kaspi_catalog.offers[0]);
-  XML.kaspi_catalog.offers[0] = { offer: {} };
   //Проверить надо если добавлю еще авейлибилити будет ли ошибка?
   for (let offer of newOffers) {
     const availability = [];
@@ -223,7 +226,8 @@ const updateXML = async (newOffers = []) => {
           break;
       }
     }
-    XML.kaspi_catalog.offers[0].offer[iter] = {
+    const temp = [];
+    temp[iter] = {
       $: { sku: offer.suk2 },
       model: [offer.model],
       brand: [offer.brand],
@@ -234,8 +238,11 @@ const updateXML = async (newOffers = []) => {
       ],
       price: [offer.actualPrice + ""],
     };
+    XML.kaspi_catalog.offers[0] = { offer: temp };
     iter++;
   }
+  // console.log(XML.kaspi_catalog.offers);
+  // console.log(XML2.kaspi_catalog.offers);
   const builder = new xml2js.Builder();
   const xml = builder.buildObject(XML);
   await fs.writeFile(XMLFilePath, xml);
