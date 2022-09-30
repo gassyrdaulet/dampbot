@@ -11,12 +11,12 @@ const damp = 1;
 const myCity = "710000000"; //Astana
 const myStoreName = "HomeTechnologies";
 const myStoreId = "15503068";
-const updateEveryXMinutes = 30;
+const updateEveryXMinutes = 15;
 const tablename = "pricelist";
+const availabaleStorages = [1];
 // const XMLFilePath = `./${tablename}.xml`;
 const XMLFilePath = `/home/apps/jmmanager/jmmanager-server/public/${tablename}.xml`;
 const cookiesPath = `./cookies/offers/cookies${tablename}.json`;
-const availabaleStorages = [1];
 //Custom
 const devices = puppeteer.devices;
 const iPhone = devices["iPhone XR"];
