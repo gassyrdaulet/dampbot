@@ -200,11 +200,12 @@ const updateXML = async (newOffers = []) => {
   // parser.parseString(data2, function (err, result) {
   //   XML2 = result;
   // });
-  let iter = 0;
   XML.kaspi_catalog.company = myStoreName;
   XML.kaspi_catalog.merchantid = myStoreId;
   delete XML.kaspi_catalog.offers[0].offer;
   //Проверить надо если добавлю еще авейлибилити будет ли ошибка?
+  let iter = 0;
+  const temp = [];
   for (let offer of newOffers) {
     const availability = [];
     for (let storage of availabaleStorages) {
@@ -226,8 +227,7 @@ const updateXML = async (newOffers = []) => {
           break;
       }
     }
-    const temp = [];
-    temp[iter] = {
+    temp.push({
       $: { sku: offer.suk2 },
       model: [offer.model],
       brand: [offer.brand],
@@ -237,9 +237,8 @@ const updateXML = async (newOffers = []) => {
         },
       ],
       price: [offer.actualPrice + ""],
-    };
+    });
     XML.kaspi_catalog.offers[0] = { offer: temp };
-    iter++;
   }
   // console.log(XML.kaspi_catalog.offers);
   // console.log(XML2.kaspi_catalog.offers);
