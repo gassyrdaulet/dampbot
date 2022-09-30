@@ -1,9 +1,9 @@
 import { waitTillHTMLRendered } from "./Service.js";
-import { data as offers2 } from "./backup.js";
-import conn from "./db.js";
 import puppeteer from "puppeteer";
 import fs from "fs/promises";
 import xml2js from "xml2js";
+import mysql from "mysql2/promise";
+import config from "config";
 
 /*************************START CONFIG***************************/
 //Editable
@@ -24,6 +24,7 @@ const iPhone = devices["iPhone XR"];
 
 /**************************START SCRAPING****************************/
 const updatePrices = async () => {
+  const conn = mysql.createPool(config.get("dataBaseConfig"));
   const offers = (await conn.query("SELECT * FROM " + tablename))[0];
 
   const newOffers = [];
@@ -125,6 +126,7 @@ const updatePrices = async () => {
     await tmpage.screenshot({ path: "img/screenshots/offers/" + itr + ".png" });
     if (responseFailed)
       console.log("SUK=" + id + " : Scrape failed with code: NOT FOUND");
+    tmpage.removeAllListeners("repsonse");
     await tmpage.close();
 
     return price;
@@ -174,6 +176,9 @@ const updatePrices = async () => {
   );
 
   updateXML(newOffers);
+
+  await browser.close();
+  await conn.end();
 
   setTimeout(() => {
     updatePrices();
