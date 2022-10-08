@@ -9,7 +9,7 @@
       <availabilities>
         <availability storeId="PP1" available="yes"/>
       </availabilities>
-      <price>8008</price>
+      <price>7492</price>
     </offer>
     <offer sku="103054186_15503068">
       <model>Рация WLN KD-C1</model>
@@ -17,15 +17,7 @@
       <availabilities>
         <availability storeId="PP1" available="yes"/>
       </availabilities>
-      <price>8008</price>
-    </offer>
-    <offer sku="103054186_15503068">
-      <model>Рация hgvhg </model>
-      <brand>WLN</brand>
-      <availabilities>
-        <availability storeId="PP1" available="yes"/>
-      </availabilities>
-      <price>8300</price>
+      <price>7492</price>
     </offer>
   </offers>
 </kaspi_catalog>
