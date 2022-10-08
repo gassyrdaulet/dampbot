@@ -4,7 +4,6 @@ import fs from "fs/promises";
 import xml2js from "xml2js";
 import mysql from "mysql2/promise";
 import config from "config";
-import axios from "axios";
 
 /*************************START CONFIG***************************/
 //Editable
@@ -21,26 +20,6 @@ const cookiesPath = `./cookies/offers/cookies${tablename}.json`;
 //Custom
 const devices = puppeteer.devices;
 const iPhone = devices["iPhone XR"];
-
-const reqUrl = "https://kaspi.kz/yml/offer-view/offers/";
-const reqBody = {
-  cityId: "710000000",
-  limit: 64,
-};
-const reqHeaders = {
-  headers: {
-    Accept: "application/json, text/*",
-    "Accept-Language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
-    Connection: "keep-alive",
-    "Content-Type": "application/json; charset=UTF-8",
-    Referer: "https://kaspi.kz/",
-    "Sec-Fetch-Dest": "empty",
-    "Sec-Fetch-Mode": "cors",
-    "Sec-Fetch-Site": "same-origin",
-    "User-Agent":
-      "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1",
-  },
-};
 /**************************END CONFIG****************************/
 
 /**************************START SCRAPING****************************/
@@ -53,60 +32,6 @@ const updatePrices = async () => {
   const browser = await puppeteer.launch({
     args: ["--no-sandbox"],
   });
-
-  /****************START GET THE LOWEST PRICE WITHOUT HEADLESS***********************/
-  const getTheLowestPrice2 = async (id, minPrice, maxPrice, url) => {
-    let price = 0;
-
-    const { data: concur } = await axios.post(reqUrl + id, reqBody, reqHeaders);
-
-    if (concur.offers[0]) {
-      console.log("SKU=" + id + " scrape success!");
-      succeededScrapes++;
-      if (concur.offers[0].price > maxPrice) {
-        price = maxPrice;
-      } else if (concur.offers[0].price > minPrice) {
-        if (concur.offers[0].merchantId === myStoreId) {
-          price = concur.offers[0].price;
-        } else {
-          if (concur.offers[0].price - minPrice < damp) {
-            price = minPrice;
-          } else {
-            price = concur.offers[0].price - damp;
-          }
-        }
-      } else if (concur.offers[0].price === minPrice) {
-        price = concur.offers[0].price;
-      } else if (concur.offers[0].price < minPrice) {
-        for (let offer of concur.offers) {
-          if (offer.kaspiDelivery === false) {
-            if (offer.price > minPrice) {
-              if (offer.merchantId === myStoreId) {
-                price = offer.price;
-              } else {
-                if (offer.price - minPrice < damp) {
-                  price = minPrice;
-                } else {
-                  price = offer.price - damp;
-                }
-              }
-            } else if (offer.price === minPrice) {
-              price = minPrice;
-            } else {
-              price = minPrice;
-            }
-            break;
-          }
-          price = Math.floor((minPrice + maxPrice) / 2);
-        }
-      }
-    } else {
-      console.log("SKU=" + id + " scrape failed!");
-      price = maxPrice;
-    }
-    return price;
-  };
-  /****************END GET THE LOWEST PRICE WITHOUT HEADLESS***********************/
 
   /****************START GET THE LOWEST PRICE ***********************/
   const getTheLowestPrice = async (id, minPrice, maxPrice, url) => {
@@ -214,7 +139,7 @@ const updatePrices = async () => {
 
   for (let offer of offers) {
     itr++;
-    const newPrice = await getTheLowestPrice2(
+    const newPrice = await getTheLowestPrice(
       offer.suk,
       offer.minprice,
       offer.maxprice,
